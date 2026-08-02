@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# 데이터/로그 (실습 산출물, 커밋하지 않음)
+data/
+*.log
+
+# OS
+.DS_Store
+
+# 민감정보 (절대 커밋 금지)
+.env
+*.pem
+*.key
+id_rsa*
+secrets*
