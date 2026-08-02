@@ -1,7 +1,5 @@
 # 내 컴퓨터에 개발자용 '작업실' 꾸미기
 
-> 실습을 진행하면서 아래 `_______` / `(붙여넣기)` 부분을 실제 명령어·출력·스크린샷으로 채우세요.
-> 실습 순서와 명령어는 [GUIDE.md](./GUIDE.md) 참고.
 
 ## 1) 프로젝트 개요
 로컬 개발 워크스테이션을 구축하는 미션. 리눅스 CLI(터미널), Docker(컨테이너),
@@ -12,7 +10,7 @@ Git/GitHub(버전관리·협업)를 사용해 "재현 가능한 실행 환경"�
 ## 2) 실행 환경
 - OS: macOS 15.7.7 (Build 24G720)
 - Shell: zsh
-- 터미널: 기본 터미널
+- 터미널: 기본 터미널 
 - 컨테이너 런타임: Docker Desktop (Context: desktop-linux)
 - Docker: Docker version 29.6.1, build 8900f1d
 - Git: git version 2.48.1
@@ -21,6 +19,7 @@ Git/GitHub(버전관리·협업)를 사용해 "재현 가능한 실행 환경"�
 - [x] 터미널 기본 조작 및 폴더 구성
 - [x] 권한 변경 실습 (파일 1 + 디렉토리 1)
 - [x] Docker 설치/점검 (`docker --version`, `docker info`)
+- [x] Docker 운영 명령 (`docker images`, `docker ps -a`, `docker logs`, `docker stats`)
 - [x] hello-world / ubuntu 컨테이너 실행
 - [x] Dockerfile 커스텀 이미지 빌드/실행
 - [x] 포트 매핑 접속(2회)
@@ -122,6 +121,29 @@ ubuntu:latest        3131b4cc82a7        180MB         44.4MB
 > **attach vs exec 차이 관찰**: `attach`는 컨테이너의 메인 프로세스(PID 1)에 다시 연결하는 것이라, 그 세션을 종료하면 메인 프로세스가 끝나 컨테이너도 멈춘다.
 > `exec`는 실행 중인 컨테이너 안에서 **새 프로세스**(예: bash)를 띄우는 것이라, 그 셸에서 나와도(exit) 컨테이너의 메인 프로세스는 계속 살아있어 컨테이너가 유지된다.
 > 그래서 실행 중인 컨테이너를 건드리며 점검할 때는 주로 `exec`를 쓴다.
+
+#### Docker 운영 명령 (로그 / 리소스 / 상태)
+```bash
+# 로그 확인
+$ docker logs log-demo
+ * Serving Flask app 'app'
+ * Debug mode: off
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5000
+ * Running on http://172.17.0.2:5000
+Press CTRL+C to quit
+
+# 리소스 사용량 확인 (1회 스냅샷)
+$ docker stats --no-stream log-demo
+CONTAINER ID   NAME       CPU %   MEM USAGE / LIMIT    MEM %   NET I/O        BLOCK I/O     PIDS
+44b5a93a8726   log-demo   0.02%   39.04MiB / 7.75GiB   0.49%   1.7kB / 126B   25.3MB / 0B   1
+
+# 전체 컨테이너 상태 확인
+$ docker ps -a
+CONTAINER ID   IMAGE              COMMAND           STATUS                            PORTS                       NAMES
+44b5a93a8726   codyssey-web:1.0   "python app.py"   Up 3 seconds (health: starting)   0.0.0.0:8080->5000/tcp      log-demo
+```
+> `docker logs`로 서버 기동 로그를, `docker stats`로 CPU·메모리 사용량을, `docker ps -a`로 상태(`Up ... health: starting`)와 포트 매핑(`0.0.0.0:8080->5000`)을 확인함.
 
 ### 4-5. Dockerfile 커스텀 이미지
 - 선택한 베이스: `python:3.12-slim` (B안 — Linux 베이스 + 기능 추가)
