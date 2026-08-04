@@ -97,8 +97,11 @@ class QuizGame:
                 "choices": quiz.choices,
                 "answer": quiz.answer,
             })
-        with open(STATE_FILE, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=2)
+        try:
+            with open(STATE_FILE, "w", encoding="utf-8") as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
+        except OSError:
+            print("저장 중 오류가 발생했습니다. (저장 실패)")
 
     def play_quiz(self):
         print("\n===== 퀴즈 풀기 =====")
