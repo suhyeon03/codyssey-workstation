@@ -122,5 +122,6 @@ JSON은 사람이 읽기 쉬운 텍스트 형식이라 저장된 데이터를 �
 ### Git 커밋/브랜치 로그 (10+ 커밋, 병합 기록)
 ![git 로그](docs/screenshots/git_log.png)
 
+
 ### git pull 실행
 ![git pull](docs/screenshots/git_pull.png)
