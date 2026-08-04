@@ -109,6 +109,15 @@ def add_quiz(quizzes):
     quizzes.append(new_quiz)                      # 퀴즈 목록에 추가
     print("새 퀴즈가 추가되었습니다!")
 
+def show_quiz_list(quizzes):
+    print("\n===== 퀴즈 목록 =====")
+    if len(quizzes) == 0:                       # 퀴즈가 없으면
+        print("등록된 퀴즈가 없습니다.")
+        return
+
+    for i in range(len(quizzes)):               # 퀴즈 개수만큼 반복
+        print(f"{i + 1}. {quizzes[i].question}")   # 번호 + 문제 출력
+
 
 def main():
     quizzes = get_default_quizzes()
@@ -126,7 +135,7 @@ def main():
         elif choice == 2:
             add_quiz(quizzes)
         elif choice == 3:
-            print("[퀴즈 목록] - ")
+            show_quiz_list(quizzes)
         elif choice == 4:
             print("[점수 확인] - ")
         elif choice == 5:
