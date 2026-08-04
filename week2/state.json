@@ -1,0 +1,75 @@
+{
+  "quizzes": [
+    {
+      "question": "파이썬에서 리스트를 만들 때 쓰는 기호는?",
+      "choices": [
+        "( )",
+        "[ ]",
+        "{ }",
+        "< >"
+      ],
+      "answer": 2
+    },
+    {
+      "question": "정수를 나타내는 파이썬 자료형은?",
+      "choices": [
+        "str",
+        "int",
+        "bool",
+        "list"
+      ],
+      "answer": 2
+    },
+    {
+      "question": "조건에 따라 다른 코드를 실행하는 키워드는?",
+      "choices": [
+        "for",
+        "while",
+        "if",
+        "def"
+      ],
+      "answer": 3
+    },
+    {
+      "question": "함수를 정의할 때 쓰는 키워드는?",
+      "choices": [
+        "func",
+        "def",
+        "define",
+        "fun"
+      ],
+      "answer": 2
+    },
+    {
+      "question": "Git에서 변경 이력을 저장(기록)하는 명령은?",
+      "choices": [
+        "git push",
+        "git commit",
+        "git status",
+        "git log"
+      ],
+      "answer": 2
+    },
+    {
+      "question": "원격 저장소를 통째로 복제하는 Git 명령은?",
+      "choices": [
+        "git pull",
+        "git clone",
+        "git init",
+        "git add"
+      ],
+      "answer": 2
+    },
+    {
+      "question": "만족도조사",
+      "choices": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "answer": 2
+    }
+  ],
+  "best_score": 6
+}
