@@ -67,93 +67,97 @@ def read_input(num, min_value, max_value):
 
         return number
 
-def play_quiz(quizzes):
-    print("\n===== 퀴즈 풀기 =====")
-    if len(quizzes) == 0:
-        print("등록된 퀴즈가 없습니다.")
-        return 0
+class QuizGame:
+    def __init__(self):
+        self.quizzes = get_default_quizzes()
+        self.best_score = None
 
-    score = 0
-    for quiz in quizzes:
-        print()
-        quiz.show()
-        answer = read_input("정답 번호를 입력하세요: ", 1, 4)
-        if quiz.is_correct(answer):
-            print("정답입니다!")
-            score = score + 1
-        else:
-            print(f"틀렸어요. 정답은 {quiz.answer}번 입니다.")
+    def play_quiz(self):
+        print("\n===== 퀴즈 풀기 =====")
+        if len(self.quizzes) == 0:
+            print("등록된 퀴즈가 없습니다.")
+            return 0
 
-    print(f"\n결과: 총 {len(quizzes)}문제 중 {score}문제 정답!")
-    return score
+        score = 0
+        for quiz in self.quizzes:
+            print()
+            quiz.show()
+            answer = read_input("정답 번호를 입력하세요: ", 1, 4)
+            if quiz.is_correct(answer):
+                print("정답입니다!")
+                score = score + 1
+            else:
+                print(f"틀렸어요. 정답은 {quiz.answer}번 입니다.")
 
-def add_quiz(quizzes):
-    print("\n===== 퀴즈 추가 =====")
+        print(f"\n결과: 총 {len(self.quizzes)}문제 중 {score}문제 정답!")
 
-    question = input("문제를 입력하세요: ").strip()
-    if question == "":
-        print("문제가 비어 있어 추가를 취소합니다.")
-        return
-
-    choices = []                          # 선택지를 담을 빈 리스트
-    for i in range(4):                     # 4번 반복해서 보기 4개 받기
-        choice = input(f"{i + 1}번 선택지: ").strip()
-        if choice == "":
-            print("선택지가 비어 있어 추가를 취소합니다.")
-            return
-        choices.append(choice)            # 받은 보기를 리스트에 추가
-
-    answer = read_input("정답 번호(1~4): ", 1, 4)
-
-    new_quiz = Quiz(question, choices, answer)   # 입력값으로 Quiz 하나 생성
-    quizzes.append(new_quiz)                      # 퀴즈 목록에 추가
-    print("새 퀴즈가 추가되었습니다!")
-
-def show_quiz_list(quizzes):
-    print("\n===== 퀴즈 목록 =====")
-    if len(quizzes) == 0:                       # 퀴즈가 없으면
-        print("등록된 퀴즈가 없습니다.")
-        return
-
-    for i in range(len(quizzes)):               # 퀴즈 개수만큼 반복
-        print(f"{i + 1}. {quizzes[i].question}")   # 번호 + 문제 출력
-
-def show_score(best_score):
-    print("\n===== 점수 확인 =====")
-    if best_score is None:                  # 아직 한 번도 안 풀었으면
-        print("아직 퀴즈를 풀지 않았습니다.")
-    else:
-        print(f"최고 점수: {best_score}점")
-
-
-def main():
-    quizzes = get_default_quizzes()
-    best_score = None 
-
-    while True:
-        print(MENU)
-        try:
-            choice = read_input("메뉴 번호를 선택하세요: ", 1, 5)
-        except (KeyboardInterrupt, EOFError):
-            print("\n입력이 중단되어 프로그램을 종료합니다.")
-            break
-
-        if choice == 1:
-            score = play_quiz(quizzes)
-            if best_score is None or score > best_score:
-                best_score = score
+        if self.best_score is None or score > self.best_score:
+                self.best_score = score
                 print("최고 점수를 갱신했습니다!")
-        elif choice == 2:
-            add_quiz(quizzes)
-        elif choice == 3:
-            show_quiz_list(quizzes)
-        elif choice == 4:
-            show_score(best_score)
-        elif choice == 5:
-            print("게임을 종료합니다.")
-            break
-        input("\n계속하려면 Enter를 누르세요...")
+
+    def add_quiz(self):
+        print("\n===== 퀴즈 추가 =====")
+
+        question = input("문제를 입력하세요: ").strip()
+        if question == "":
+            print("문제가 비어 있어 추가를 취소합니다.")
+            return
+
+        choices = []                          # 선택지를 담을 빈 리스트
+        for i in range(4):                     # 4번 반복해서 보기 4개 받기
+            choice = input(f"{i + 1}번 선택지: ").strip()
+            if choice == "":
+                print("선택지가 비어 있어 추가를 취소합니다.")
+                return
+            choices.append(choice)            # 받은 보기를 리스트에 추가
+
+        answer = read_input("정답 번호(1~4): ", 1, 4)
+
+        new_quiz = Quiz(question, choices, answer)   # 입력값으로 Quiz 하나 생성
+        self.quizzes.append(new_quiz)                      # 퀴즈 목록에 추가
+        print("새 퀴즈가 추가되었습니다!")
+
+    def show_quiz_list(self):
+        print("\n===== 퀴즈 목록 =====")
+        if len(self.quizzes) == 0:                       # 퀴즈가 없으면
+            print("등록된 퀴즈가 없습니다.")
+            return
+
+        for i in range(len(self.quizzes)):               # 퀴즈 개수만큼 반복
+            print(f"{i + 1}. {self.quizzes[i].question}")   # 번호 + 문제 출력
+
+    def show_score(self):
+        print("\n===== 점수 확인 =====")
+        if self.best_score is None:                  # 아직 한 번도 안 풀었으면
+            print("아직 퀴즈를 풀지 않았습니다.")
+        else:
+            print(f"최고 점수: {self.best_score}점")
+
+
+    def run(self):
+
+        while True:
+            print(MENU)
+            try:
+                choice = read_input("메뉴 번호를 선택하세요: ", 1, 5)
+            except (KeyboardInterrupt, EOFError):
+                print("\n입력이 중단되어 프로그램을 종료합니다.")
+                break
+
+            if choice == 1:
+                self.play_quiz()
+            elif choice == 2:
+                self.add_quiz()
+            elif choice == 3:
+                self.show_quiz_list()
+            elif choice == 4:
+                self.show_score()
+            elif choice == 5:
+                print("게임을 종료합니다.")
+                break
+            input("\n계속하려면 Enter를 누르세요...")
 
 
 if __name__ == "__main__":
-    main()
+    game = QuizGame()
+    game.run()
