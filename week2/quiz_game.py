@@ -1,8 +1,38 @@
+import json
+STATE_FILE = "state.json"
 class Quiz:
-    def __init__(self, question, choices, answer):
-        self.question = question    # 문제 (글자)
-        self.choices = choices      # 선택지 4개 (리스트)
-        self.answer = answer        # 정답 번호 1~4 (숫자)
+    def __init__(self):
+        self.quizzes = []           
+        self.best_score = None     
+        self.load_state()     
+
+    def load_state(self):
+        try:
+            with open(STATE_FILE, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            self.quizzes = []
+            for q in data["quizzes"]:
+                self.quizzes.append(Quiz(q["question"], q["choices"], q["answer"]))
+            self.best_score = data.get("best_score")
+        except FileNotFoundError:
+            print("저장 파일이 없어 기본 퀴즈로 시작합니다.")
+            self.quizzes = get_default_quizzes()
+            self.best_score = None
+        except (json.JSONDecodeError, KeyError):
+            print("저장 파일이 손상되어 기본 퀴즈로 복구합니다.")
+            self.quizzes = get_default_quizzes()
+            self.best_score = None
+
+    def save_state(self):
+        data = {"quizzes": [], "best_score": self.best_score}
+        for quiz in self.quizzes:
+            data["quizzes"].append({
+                "question": quiz.question,
+                "choices": quiz.choices,
+                "answer": quiz.answer,
+            })
+        with open(STATE_FILE, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)      
 
     def show(self):
             print(self.question)                 # 문제 출력
@@ -94,6 +124,7 @@ class QuizGame:
         if self.best_score is None or score > self.best_score:
                 self.best_score = score
                 print("최고 점수를 갱신했습니다!")
+        self.save_state() 
 
     def add_quiz(self):
         print("\n===== 퀴즈 추가 =====")
@@ -114,7 +145,8 @@ class QuizGame:
         answer = read_input("정답 번호(1~4): ", 1, 4)
 
         new_quiz = Quiz(question, choices, answer)   # 입력값으로 Quiz 하나 생성
-        self.quizzes.append(new_quiz)                      # 퀴즈 목록에 추가
+        self.quizzes.append(new_quiz)   
+        self.save_state()                    # 퀴즈 목록에 추가
         print("새 퀴즈가 추가되었습니다!")
 
     def show_quiz_list(self):
@@ -142,6 +174,7 @@ class QuizGame:
                 choice = read_input("메뉴 번호를 선택하세요: ", 1, 5)
             except (KeyboardInterrupt, EOFError):
                 print("\n입력이 중단되어 프로그램을 종료합니다.")
+                self.save_state() 
                 break
 
             if choice == 1:
@@ -154,6 +187,7 @@ class QuizGame:
                 self.show_score()
             elif choice == 5:
                 print("게임을 종료합니다.")
+                self.save_state() 
                 break
             input("\n계속하려면 Enter를 누르세요...")
 
