@@ -283,6 +283,47 @@ branch 'main' set up to track 'origin/main'.
   - 붙여넣은 명령을 다시 보니 `curl ... /count\; echo` 로, `; echo`의 세미콜론이 이스케이프되어 요청 URL이 `/count;`가 되어 있었음.
 - 해결/대안: `curl`과 `; echo`를 한 줄에 두지 않고 **명령을 한 줄에 하나씩** 실행하니 `/count`가 정상 응답(1→2→3). 결론: 코드·이미지·볼륨 모두 정상이었고, 터미널 붙여넣기 시 세미콜론 이스케이프가 원인이었다.
 
+### 트러블슈팅: 포트 충돌 진단 및 해결
+
+`docker run -p 8080:5000 ...` 실행 시 아래처럼 포트가 이미 사용 중이라는 에러가 날 수 있다.
+```
+docker: Error response from daemon: driver failed programming external connectivity on endpoint ...:
+Bind for 0.0.0.0:8080 failed: port is already allocated.
+```
+
+**1단계 — 포트 사용 여부 확인**
+호스트에서 해당 포트를 누가 쓰는지 확인한다.
+```bash
+$ lsof -i :8080
+COMMAND   PID     USER   FD   TYPE   DEVICE SIZE/OFF NODE NAME
+com.docke 1234  suhyeon  ...  IPv4   ...      0t0    TCP  *:http-alt (LISTEN)
+```
+또는 Docker 컨테이너가 그 포트를 점유 중인지 확인한다.
+```bash
+$ docker ps --filter "publish=8080"
+CONTAINER ID   IMAGE              COMMAND           STATUS         PORTS                    NAMES
+44b5a93a8726   codyssey-web:1.0   "python app.py"   Up 3 minutes   0.0.0.0:8080->5000/tcp   web-8080
+```
+
+**2단계 — 점유 프로세스/컨테이너 확인**
+위 결과에서 어떤 컨테이너(`NAMES`)나 프로세스(`PID`)가 8080을 잡고 있는지 파악한다.
+예: `web-8080` 컨테이너가 8080을 사용 중.
+
+**3단계 — 포트 해제 또는 변경**
+방법 A) 점유 중인 컨테이너를 중지·삭제해 포트를 해제한다.
+```bash
+$ docker rm -f web-8080
+web-8080
+```
+방법 B) 컨테이너를 살려둔 채, 다른 호스트 포트로 실행한다.
+```bash
+$ docker run -d -p 8081:5000 --name web-8081 codyssey-web:1.0
+$ curl http://localhost:8081
+```
+
+**결과:** 포트를 해제하거나 다른 포트(8081)로 매핑하면 정상 실행된다.
+호스트 포트만 다르면 같은 이미지를 여러 개 동시에 띄울 수도 있다.
+
 ---
 
 ## 6) 보안 확인
