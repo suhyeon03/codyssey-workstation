@@ -118,9 +118,17 @@ def show_quiz_list(quizzes):
     for i in range(len(quizzes)):               # 퀴즈 개수만큼 반복
         print(f"{i + 1}. {quizzes[i].question}")   # 번호 + 문제 출력
 
+def show_score(best_score):
+    print("\n===== 점수 확인 =====")
+    if best_score is None:                  # 아직 한 번도 안 풀었으면
+        print("아직 퀴즈를 풀지 않았습니다.")
+    else:
+        print(f"최고 점수: {best_score}점")
+
 
 def main():
     quizzes = get_default_quizzes()
+    best_score = None 
 
     while True:
         print(MENU)
@@ -131,13 +139,16 @@ def main():
             break
 
         if choice == 1:
-            play_quiz(quizzes)
+            score = play_quiz(quizzes)
+            if best_score is None or score > best_score:
+                best_score = score
+                print("최고 점수를 갱신했습니다!")
         elif choice == 2:
             add_quiz(quizzes)
         elif choice == 3:
             show_quiz_list(quizzes)
         elif choice == 4:
-            print("[점수 확인] - ")
+            show_score(best_score)
         elif choice == 5:
             print("게임을 종료합니다.")
             break
