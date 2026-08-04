@@ -17,3 +17,4 @@ data/
 *.key
 id_rsa*
 secrets*
+week2/state.json # week2 퀴즈 게임 실행 중 생성 데이터
