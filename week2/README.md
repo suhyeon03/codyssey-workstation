@@ -81,6 +81,12 @@ week2/
 ### 점수 확인
 ![점수 확인](docs/screenshots/score.png)
 
+### 잘못된 입력 처리
+![잘못된 입력 처리](docs/screenshots/error_handling.png)
+
+### 재시작 후 데이터 유지 (영속성)
+![데이터 유지](docs/screenshots/persistence.png)
+
 ### 개발 환경 / Git 로그
 ![개발 환경](docs/screenshots/dev_env.png)
 ![git 로그](docs/screenshots/git_log.png)
